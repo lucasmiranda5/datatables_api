@@ -1,7 +1,9 @@
 name: datatables_api
 description: Crie tabelas com dados dinamicos
 version: 0.0.1
-homepage:
+homepage: https://github.com/lucasmiranda5/datatables_api
+repository: https://github.com/lucasmiranda5/datatables_api
+
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
