@@ -27,30 +27,7 @@ class _DataTablesAPIState extends State<DataTablesAPI> {
     dados = new DadosTabela(widget.url, widget.fields!, widget.headers);
     await dados.chamarDados();
     table = PaginatedDataTable(
-        actions: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  //controller: store.senha,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 3.0),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.search,
-                      ),
-                      onPressed: () => print("Lucas"),
-                    ),
-                    hintText: 'Pesquisar',
-                  ),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              )
-            ],
-          ),
-        ],
+        
         columns: widget.fields!.map((e) => DataColumn(label: Text(e.label!))).toList(),
         source: dados,
         showCheckboxColumn: true,
