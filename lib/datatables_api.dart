@@ -1,4 +1,5 @@
 library datatables_api;
+
 import 'package:flutter/material.dart';
 import 'package:datatables_api/dados.dart';
 import 'package:datatables_api/fieldsDataTables.dart';
@@ -7,7 +8,20 @@ class DataTablesAPI extends StatefulWidget {
   final Uri? url;
   final List<FieldsDataTablesAPI>? fields;
   final Map<String, String>? headers;
-  DataTablesAPI({Key? key, @required this.url, @required this.fields, this.headers}) : super(key: key);
+  final bool? search;
+  final String? labelSearch;
+  final bool? searchOnChange;
+  final String? title;
+  DataTablesAPI({
+    Key? key,
+    @required this.url,
+    @required this.fields,
+    this.headers,
+    this.search = true,
+    this.labelSearch = "Pesquisar",
+    this.searchOnChange = true,
+    this.title,
+  }) : super(key: key);
 
   @override
   State<DataTablesAPI> createState() => _DataTablesAPIState();
@@ -27,7 +41,7 @@ class _DataTablesAPIState extends State<DataTablesAPI> {
     dados = new DadosTabela(widget.url, widget.fields!, widget.headers);
     await dados.chamarDados();
     table = PaginatedDataTable(
-        
+        rowsPerPage: dados.porPagina,
         columns: widget.fields!.map((e) => DataColumn(label: Text(e.label!))).toList(),
         source: dados,
         showCheckboxColumn: true,
@@ -41,6 +55,37 @@ class _DataTablesAPIState extends State<DataTablesAPI> {
 
   @override
   Widget build(BuildContext context) {
-    return table;
+    return Column(
+      children: [
+        Row(
+          children: [
+            widget.title != null ? Expanded(child: Text(widget.title!)) : SizedBox(),
+             widget.search == true ?
+            Expanded(
+              child: TextField(
+                // controller: store.senha,
+                onChanged: (value) => dados.setSearch(value,widget.searchOnChange),
+                onSubmitted: (value) => dados.setSearch(value,true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                  ),
+                
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.search,
+                    ),
+                    onPressed: () => dados.chamarDados
+                  ),
+                  hintText: widget.labelSearch,
+                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ) : SizedBox()
+          ],
+        ),
+        table,
+      ],
+    );
   }
 }

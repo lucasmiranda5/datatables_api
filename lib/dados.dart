@@ -9,6 +9,8 @@ class DadosTabela extends DataTableSource {
   final List<FieldsDataTablesAPI>? campos;
   final Map<String, String>? headers;
 
+  String search = "";
+
   List? data;
 
   int quatidadePagina = 0;
@@ -21,6 +23,13 @@ class DadosTabela extends DataTableSource {
 
   DadosTabela(this.url, this.campos, this.headers) {
     chamarDados();
+  }
+
+  void setSearch(String valor, bool pesquisa) {
+    search = valor;
+    if (pesquisa) {
+      chamarDados();
+    }
   }
 
   Future<void> chamarDados() async {
@@ -40,8 +49,9 @@ class DadosTabela extends DataTableSource {
         }
       }
     }
-
-    var uri = url!.replace(queryParameters: {'page': pag.toString(), 'fields': fields, 'limit': porPagina.toString()});
+    Map<String, dynamic> querys = {'page': pag.toString(), 'fields': fields, 'limit': porPagina.toString()};
+    if (search != "") querys['search'] = search;
+    var uri = url!.replace(queryParameters: querys);
     var resposta = await http.get(uri, headers: headers);
     if (resposta.statusCode == 200) {
       var retorno = jsonDecode(resposta.body);
@@ -65,7 +75,7 @@ class DadosTabela extends DataTableSource {
         cells: campos!.map((e) {
       String campoMap = e.name != null ? "name" : "id";
       int newIndex = index;
-      if(index >= porPagina){
+      if (index >= porPagina) {
         newIndex = index - ((pag - 1) * porPagina);
       }
       if (e.child != null) {
