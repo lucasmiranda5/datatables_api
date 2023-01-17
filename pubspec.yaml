@@ -11,6 +11,7 @@ environment:
 
 dependencies:
   http: ^0.13.4
+  fluent_ui: ^3.9.1
   flutter:
     sdk: flutter
 

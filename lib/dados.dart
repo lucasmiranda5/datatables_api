@@ -8,6 +8,8 @@ class DadosTabela extends DataTableSource {
   final Uri? url;
   final List<FieldsDataTablesAPI>? campos;
   final Map<String, String>? headers;
+  final int porPagina;
+  dynamic controller;
 
   String search = "";
 
@@ -17,11 +19,10 @@ class DadosTabela extends DataTableSource {
 
   int pag = 1;
 
-  int porPagina = 2;
 
   int count = 0;
 
-  DadosTabela(this.url, this.campos, this.headers) {
+  DadosTabela(this.url, this.campos, this.headers, this.porPagina ) {
     chamarDados();
   }
 
@@ -73,7 +74,6 @@ class DadosTabela extends DataTableSource {
   DataRow getRow(int index) {
     return DataRow(
         cells: campos!.map((e) {
-      String campoMap = e.name != null ? "name" : "id";
       int newIndex = index;
       if (index >= porPagina) {
         newIndex = index - ((pag - 1) * porPagina);
@@ -81,7 +81,8 @@ class DadosTabela extends DataTableSource {
       if (e.child != null) {
         Widget wid = e.child!(data![newIndex]);
         return DataCell(wid);
-      } else {
+      } else { 
+        String campoMap = e.name != null ? e.name! : e.id!;
         return DataCell(Text(data![newIndex][campoMap].toString()));
       }
     }).toList());
